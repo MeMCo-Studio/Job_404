@@ -5,8 +5,7 @@ use bevy::{
     prelude::{Color, Component, Vec2, Vec3},
     text::TextColor,
     ui::{
-        AlignItems, BackgroundColor, BorderColor, BorderRadius, JustifyContent, Node, UiRect,
-        percent, px,
+        AlignItems, BackgroundColor, BorderColor, BorderRadius, JustifyContent, Node, UiRect, px,
         widget::{Button, Text, TextShadow},
     },
     utils::default,

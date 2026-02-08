@@ -83,7 +83,7 @@ impl WindowBuilder {
         );
 
         let parent = commands.spawn(parent).id();
-        let titlebar = commands.spawn(titlebar).observe(drag_start_handler).id();
+        let titlebar = commands.spawn(titlebar).observe(drag_handler).id();
         let content = commands.spawn(self.build_content()).id();
         commands.entity(content).add_children(children);
         commands.entity(parent).add_children(&[titlebar, content]);
@@ -117,7 +117,7 @@ impl WindowBuilder {
     }
 }
 
-fn drag_start_handler(
+fn drag_handler(
     on_drag: On<Pointer<Drag>>,
     children: Query<&ChildOf>,
     mut transforms: Query<&mut UiTransform>,
