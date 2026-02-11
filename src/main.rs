@@ -1,6 +1,7 @@
+#![allow(unused)]
 use bevy::{
     DefaultPlugins,
-    app::{App, Startup},
+    app::{App, Startup, Update},
     asset::AssetServer,
     camera::Camera2d,
     color::Color,
@@ -13,16 +14,20 @@ use bevy::{
     utils::default,
 };
 
-use crate::components::ui::{button::UiButtonBuilder, window::WindowBuilder};
+use crate::{
+    ui::components::button::UiButtonBuilder,
+    window_manager::{components::window::WindowBuilder, systems::window_resize::on_resize_system},
+};
 
-mod components;
+mod ui;
+mod window_manager;
 
 fn main() {
     let mut app = App::new();
 
     app.add_plugins(DefaultPlugins);
     app.add_systems(Startup, setup);
-
+    app.add_systems(Update, on_resize_system);
     app.run();
 }
 

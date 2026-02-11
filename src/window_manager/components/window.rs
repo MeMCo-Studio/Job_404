@@ -28,6 +28,7 @@ pub struct WindowBuilder {
     title: String,
     pos: Vec2,
     background_color: Color,
+    maximized: bool,
 }
 
 impl Default for WindowBuilder {
@@ -36,6 +37,7 @@ impl Default for WindowBuilder {
             title: String::from("Window"),
             pos: Vec2 { x: 0.0, y: 0.0 },
             background_color: Color::WHITE,
+            maximized: false,
         }
     }
 }
