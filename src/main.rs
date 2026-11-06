@@ -1,36 +1,26 @@
+mod assets;
+mod inputs;
 mod render;
 mod sprite;
+mod world_state;
 
 use macroquad::prelude::*;
 use render::Renderer;
 
-use crate::sprite::Sprite;
+use crate::{assets::Assets, world_state::WorldState};
 
 #[macroquad::main("404 Job not found")]
 async fn main() {
-    let player_front = load_texture("assets/textures/sprites/player/placeholder1.png").await.unwrap();
-    let player_back = load_texture("assets/textures/sprites/player/placeholder2.png").await.unwrap();
+    let assets = Assets::new().await;
     let mut renderer = Renderer::new();
-    let mut player = Sprite::new(0.0, 0.0, &player_front);
+    let mut world_state = WorldState::new(&assets);
     // let mut player = &playerFront;
-    player_front.set_filter(FilterMode::Nearest);
-    player_back.set_filter(FilterMode::Nearest);
     loop {
         clear_background(BLACK);
         draw_text("404 NOT FOUND", 20.0, 20.0, 20.0, DARKBLUE);
-        if is_key_down(KeyCode::Z) {
-            player.texture = &player_back;
-            player.position.y -= 1.0;
-        } else if is_key_down(KeyCode::S) {
-            player.texture = &player_front;
-            player.position.y += 1.0;
-        } else if is_key_down(KeyCode::Q) {
-            player.position.x -= 1.0;
-        } else if is_key_down(KeyCode::D) {
-            player.position.x += 1.0;
-        }
+        world_state.update();
         renderer.update();
-        renderer.render(&player);
+        world_state.render(&renderer);
         next_frame().await
     }
 }
