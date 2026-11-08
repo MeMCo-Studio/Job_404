@@ -1,18 +1,24 @@
-use macroquad::{input::{KeyCode, is_key_down}, math::vec2};
+use macroquad::{
+    input::{KeyCode, is_key_down},
+    math::vec2,
+};
 
-use crate::{assets::Assets, world_state::{Orientation, PlayerState}};
+use crate::{
+    assets::Assets,
+    world_state::{Orientation, PlayerState},
+};
 
 pub struct PlayerController<'a> {
     speed: f32,
-    assets: &'a Assets
+    assets: &'a Assets,
 }
 
-impl <'a> PlayerController <'a> {
+impl<'a> PlayerController<'a> {
     pub fn new(assets: &'a Assets) -> Self {
-        return Self { 
+        return Self {
             speed: 1.0,
-            assets: assets
-        }
+            assets: assets,
+        };
     }
 
     pub fn process_inputs(&mut self, player_state: &mut PlayerState<'a>) {
@@ -44,6 +50,5 @@ impl <'a> PlayerController <'a> {
             player_state.sprite.position.x = player_state.position.x;
             player_state.sprite.position.y = player_state.position.y;
         }
-        
     }
 }

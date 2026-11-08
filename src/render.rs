@@ -6,7 +6,7 @@ const VIEWPORT_SIZE: i32 = 256;
 pub struct Renderer {
     scale: f32,
     size: f32,
-    offset: Vec2
+    offset: Vec2,
 }
 
 impl Renderer {
@@ -14,7 +14,7 @@ impl Renderer {
         let mut new_renderer = Renderer {
             scale: 0.0,
             size: 0.0,
-            offset: vec2(0.0, 0.0)
+            offset: vec2(0.0, 0.0),
         };
         new_renderer.update();
         return new_renderer;
@@ -32,9 +32,18 @@ impl Renderer {
 
     pub fn render(&self, sprite: &Sprite) {
         let draw_parameters = DrawTextureParams {
-            dest_size: Some(vec2(sprite.texture.width() * self.scale, sprite.texture.height() * self.scale)),
+            dest_size: Some(vec2(
+                sprite.texture.width() * self.scale,
+                sprite.texture.height() * self.scale,
+            )),
             ..Default::default()
         };
-        draw_texture_ex(&sprite.texture, sprite.position.x * self.scale + self.offset.x, sprite.position.y * self.scale + self.offset.y, WHITE, draw_parameters);
+        draw_texture_ex(
+            &sprite.texture,
+            sprite.position.x * self.scale + self.offset.x,
+            sprite.position.y * self.scale + self.offset.y,
+            WHITE,
+            draw_parameters,
+        );
     }
 }
