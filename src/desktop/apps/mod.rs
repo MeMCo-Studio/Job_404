@@ -17,7 +17,7 @@ pub trait App {
     fn default_size(&self) -> Vec2 {
         vec2(500.0, 600.0)
     }
-    fn ui(&mut self, ui: &mut Ui, game: &mut GameState);
+    fn ui(&mut self, ui: &mut Ui, game_state: &mut GameState);
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]

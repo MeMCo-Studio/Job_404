@@ -4,28 +4,37 @@ pub mod style;
 pub mod taskbar;
 pub mod widgets;
 
+use std::fmt::Debug;
+
 use crate::{
     desktop::{
         apps::{App, AppKind},
         taskbar::paint_taskbar,
         widgets::window::{WindowState, game_window},
     },
-    game_state::{GameScene, GameState},
+    game_state::{Game, GameState},
 };
 
 use egui_macroquad::egui::{self, Id};
 
 use egui::{Context, RichText, Vec2};
-use macroquad::input::{KeyCode, is_key_pressed};
 
+#[derive(Debug, Default)]
 pub struct Desktop {
     windows: Vec<AppWindow>,
 }
 
+#[derive(Debug)]
 pub struct AppWindow {
     pub id: egui::Id,
     pub state: WindowState,
     pub app: Box<dyn App>,
+}
+
+impl Debug for Box<dyn App> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Box").finish()
+    }
 }
 
 impl Desktop {
@@ -35,13 +44,9 @@ impl Desktop {
         }
     }
 
-    pub fn update(&mut self, state: &mut GameState) {
-        if is_key_pressed(KeyCode::Escape) {
-            state.scene = GameScene::World
-        }
-    }
+    pub fn update(&mut self) {}
 
-    pub fn show(&mut self, ctx: &Context, game: &mut GameState) {
+    pub fn show(&mut self, ctx: &Context, game_state: &mut GameState) {
         self.draw_background(ctx);
         if let Some(kind) = self.draw_icons(ctx) {
             self.open_app(ctx, kind);
@@ -56,7 +61,7 @@ impl Desktop {
                 window.id,
                 &mut window.state,
                 &window.app.title(),
-                |ui| window.app.ui(ui, game),
+                |ui| window.app.ui(ui, game_state),
             );
         }
     }

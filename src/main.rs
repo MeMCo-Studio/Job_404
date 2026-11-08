@@ -2,55 +2,52 @@ mod assets;
 mod desktop;
 mod game_state;
 mod inputs;
-mod render;
 mod sprite;
 mod world_state;
 
 use macroquad::prelude::*;
-use render::Renderer;
 
-use crate::{
-    assets::Assets,
-    desktop::Desktop,
-    game_state::{GameScene, GameState},
-    world_state::WorldState,
-};
-
+use crate::{assets::Assets, game_state::Game, world_state::WORLD_SIZE};
 #[macroquad::main("404 Job not found")]
 async fn main() {
     let assets = Assets::new().await;
-    let mut renderer = Renderer::new();
-    let mut world_state = WorldState::new(&assets);
-    let mut desktop = Desktop::new();
-    let mut game = GameState::default();
+    let mut game = Game::new(&assets).await;
 
+    let render_target = render_target(WORLD_SIZE as u32, WORLD_SIZE as u32);
+    render_target.texture.set_filter(FilterMode::Nearest);
+    let mut render_target_cam =
+        Camera2D::from_display_rect(Rect::new(0., 0., WORLD_SIZE, WORLD_SIZE));
+    render_target_cam.render_target = Some(render_target.clone());
     egui_macroquad::cfg(desktop::style::configure_style);
 
     loop {
-        clear_background(BLACK);
-        draw_text("404 NOT FOUND", 20.0, 20.0, 20.0, DARKBLUE);
+        let scale = f32::min(screen_width() / WORLD_SIZE, screen_height() / WORLD_SIZE);
 
-        renderer.update();
+        set_camera(&render_target_cam);
 
         // Update
-        match game.scene {
-            GameScene::World => world_state.update(&mut game),
-            GameScene::Desktop => desktop.update(&mut game),
-        }
+        game.update();
+        game.render();
 
-        // Render ui + world
-        egui_macroquad::ui(|ctx| match game.scene {
-            GameScene::World => {} // HUD
-            GameScene::Desktop => desktop.show(ctx, &mut game),
-        });
+        set_default_camera();
+        clear_background(BLACK);
 
-        if game.scene == GameScene::World {
-            world_state.render(&renderer);
-        }
+        draw_texture_ex(
+            &render_target.texture,
+            (screen_width() - (WORLD_SIZE as f32 * scale)) * 0.5,
+            (screen_height() - (WORLD_SIZE as f32 * scale)) * 0.5,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(vec2(WORLD_SIZE as f32 * scale, WORLD_SIZE as f32 * scale)),
+                flip_y: true, // Must flip y otherwise 'render_target' will be upside down
+                ..Default::default()
+            },
+        );
 
         // draw gui on top
         egui_macroquad::draw();
 
+        draw_fps();
         next_frame().await
     }
 }

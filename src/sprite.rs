@@ -4,12 +4,14 @@ use std::{
 };
 
 use macroquad::{
+    color::WHITE,
     math::{Vec2, vec2},
-    texture::Texture2D,
+    texture::{Texture2D, draw_texture},
 };
 
 static SPRITE_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
+#[derive(Debug)]
 pub struct Sprite<'a> {
     id: usize,
     pub position: Vec2,
@@ -23,6 +25,10 @@ impl<'a> Sprite<'a> {
             position: vec2(x, y),
             texture: texture,
         };
+    }
+
+    pub fn render(&self) {
+        draw_texture(self.texture, self.position.x, self.position.y, WHITE);
     }
 }
 

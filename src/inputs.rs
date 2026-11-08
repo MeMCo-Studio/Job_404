@@ -1,27 +1,18 @@
 use macroquad::{
-    input::{KeyCode, is_key_down},
+    input::{KeyCode, is_key_down, is_key_pressed},
     math::vec2,
 };
 
 use crate::{
     assets::Assets,
+    game_state::{Game, GameScene},
     world_state::{Orientation, PlayerState},
 };
 
-pub struct PlayerController<'a> {
-    speed: f32,
-    assets: &'a Assets,
-}
+pub struct InputController {}
 
-impl<'a> PlayerController<'a> {
-    pub fn new(assets: &'a Assets) -> Self {
-        return Self {
-            speed: 1.0,
-            assets: assets,
-        };
-    }
-
-    pub fn process_inputs(&mut self, player_state: &mut PlayerState<'a>) {
+impl InputController {
+    pub fn process_player_inputs(player_state: &mut PlayerState) {
         let is_up_pressed = is_key_down(KeyCode::Z);
         let is_down_pressed = is_key_down(KeyCode::S);
         let is_left_pressed = is_key_down(KeyCode::Q);
@@ -30,11 +21,9 @@ impl<'a> PlayerController<'a> {
         let mut direction = vec2(0.0, 0.0);
         if is_up_pressed && !is_down_pressed {
             direction.y = -1.0;
-            player_state.sprite.texture = &self.assets.player_back;
             player_state.orientation = Orientation::UP;
         } else if is_down_pressed && !is_up_pressed {
             direction.y = 1.0;
-            player_state.sprite.texture = &self.assets.player_front;
             player_state.orientation = Orientation::DOWN;
         }
         if is_right_pressed && !is_left_pressed {
@@ -46,9 +35,17 @@ impl<'a> PlayerController<'a> {
         }
         let direction = direction.try_normalize();
         if direction.is_some() {
-            player_state.position += direction.unwrap() * self.speed;
+            player_state.position += direction.unwrap();
             player_state.sprite.position.x = player_state.position.x;
             player_state.sprite.position.y = player_state.position.y;
+        }
+    }
+
+    pub fn process_ui_inputs(state: &mut Game) {
+        if is_key_pressed(KeyCode::Enter) {
+            state.scene = GameScene::Desktop;
+        } else if is_key_pressed(KeyCode::Escape) {
+            state.scene = GameScene::World
         }
     }
 }
