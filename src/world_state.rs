@@ -1,17 +1,10 @@
 use macroquad::{
-    color::{DARKGRAY, WHITE},
-    input::{KeyCode, is_key_pressed},
+    color::WHITE,
     math::{Vec2, vec2},
-    shapes::draw_rectangle,
     texture::draw_texture,
 };
 
-use crate::{
-    assets::Assets,
-    game_state::{Game, GameScene},
-    inputs::InputController,
-    sprite::Sprite,
-};
+use crate::{assets::Assets, inputs::InputController, sprite::Sprite};
 
 pub const WORLD_SIZE: f32 = 256.0;
 

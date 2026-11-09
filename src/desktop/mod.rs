@@ -12,7 +12,7 @@ use crate::{
         taskbar::paint_taskbar,
         widgets::window::{WindowState, game_window},
     },
-    game_state::{Game, GameState},
+    game_state::GameState,
 };
 
 use egui_macroquad::egui::{self, Id};
@@ -51,7 +51,7 @@ impl Desktop {
         if let Some(kind) = self.draw_icons(ctx) {
             self.open_app(ctx, kind);
         }
-        self.draw_taskbar(ctx);
+        paint_taskbar(ctx, &mut self.windows, game_state);
         for window in self.windows.iter_mut() {
             if !window.state.is_opened() || window.state.is_minimized() {
                 continue;
@@ -127,9 +127,5 @@ impl Desktop {
             state,
             app,
         });
-    }
-
-    fn draw_taskbar(&mut self, ctx: &Context) {
-        paint_taskbar(ctx, &mut self.windows);
     }
 }
