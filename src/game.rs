@@ -1,19 +1,10 @@
-use std::time::Duration;
-
-use crate::{assets::Assets, desktop::Desktop, inputs::InputController, world_state::WorldState};
-
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
-pub enum GameScene {
-    #[default]
-    World,
-    Desktop,
-}
-
-#[derive(Debug, Default)]
-pub struct GameState {
-    money: f32,
-    time: Duration,
-}
+use crate::{
+    assets::Assets,
+    desktop::Desktop,
+    game_state::{GameScene, GameState},
+    inputs::InputController,
+    world_state::WorldState,
+};
 
 #[derive(Debug)]
 pub struct Game<'a> {
@@ -34,6 +25,7 @@ impl<'a> Game<'a> {
     }
 
     pub fn update(&mut self) {
+        self.game_state.update();
         match self.scene {
             GameScene::World => self.world.update(),
             GameScene::Desktop => self.desktop.update(),

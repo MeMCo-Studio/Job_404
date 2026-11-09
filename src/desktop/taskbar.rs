@@ -2,9 +2,12 @@ use egui_macroquad::egui::{
     Align, Button, Context, Frame, Layout, Margin, RichText, Stroke, TopBottomPanel,
 };
 
-use crate::desktop::{AppWindow, palette};
+use crate::{
+    desktop::{AppWindow, palette},
+    game_state::GameState,
+};
 
-pub fn paint_taskbar(ctx: &Context, windows: &mut Vec<AppWindow>) {
+pub fn paint_taskbar(ctx: &Context, windows: &mut Vec<AppWindow>, game_state: &mut GameState) {
     TopBottomPanel::bottom("taskbar")
         .exact_height(42.0)
         .frame(
@@ -39,9 +42,12 @@ pub fn paint_taskbar(ctx: &Context, windows: &mut Vec<AppWindow>) {
                         window.state.toggle_minimize();
                     };
                 }
-
+                let now = game_state.time.now();
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    ui.label(RichText::new("14:32").color(palette::TEXT_INVERSE));
+                    ui.label(
+                        RichText::new(now.format("%A %d %B %H:%M").to_string())
+                            .color(palette::TEXT_INVERSE),
+                    );
                 });
             });
         });

@@ -4,8 +4,8 @@ use macroquad::{
 };
 
 use crate::{
-    assets::Assets,
-    game_state::{Game, GameScene},
+    game::Game,
+    game_state::GameScene,
     world_state::{Orientation, PlayerState},
 };
 

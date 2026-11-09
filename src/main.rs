@@ -1,5 +1,6 @@
 mod assets;
 mod desktop;
+mod game;
 mod game_state;
 mod inputs;
 mod sprite;
@@ -7,7 +8,7 @@ mod world_state;
 
 use macroquad::prelude::*;
 
-use crate::{assets::Assets, game_state::Game, world_state::WORLD_SIZE};
+use crate::{assets::Assets, game::Game, world_state::WORLD_SIZE};
 #[macroquad::main("404 Job not found")]
 async fn main() {
     let assets = Assets::new().await;
